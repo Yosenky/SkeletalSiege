@@ -8,21 +8,38 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshSurface))]
 public class MeshGenerator : MonoBehaviour
 {
+    // generating map
     Mesh mesh;
 
     Vector3[] vertices;
     int[] triangles;
 
-    public int xSize = 50;
-    public int zSize = 50;
-    public int numOctaves = 4;
-    public float lacunarity = 0.5f;
-    public float persistence = 1.4f;
-    public float scale = 1f;
+    public int xSize = 100;
+    public int zSize = 100;
+    public float noise1Scale = 3.26f;
+    public float noise1Amp = 18.76f;
+    public float noise2Scale = 11.04f;
+    public float noise2Amp = -4.2f;
+    public float noise3Scale = 80.35f;
+    public float noise3Amp = 1f;
+    public float noiseStrength = 1f;
+    //public int numOctaves = 4;
+    //public float lacunarity = 0.5f;
+    //public float persistence = 1.4f;
+    //public float scale = 1f;
 
-    public GameObject barbarian;
+    // coloring map
+    Color[] colors;
+    public Gradient gradient;
+    float minTerrainHeight;
+    float maxTerrainHeight;
+
+    // unit gameobjects
+    //public GameObject barbarian;
 
     private NavMeshSurface navMeshSurface;
+
+
     void Start()
     {
         mesh = new Mesh(); 
@@ -31,7 +48,7 @@ public class MeshGenerator : MonoBehaviour
         CreateShape();
         UpdateMesh();
         BakeNavMesh();
-        Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
+        //Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
         
     }
 
@@ -44,7 +61,7 @@ public class MeshGenerator : MonoBehaviour
         //BakeNavMesh();
     }
 
-    
+    /**
     float CalculateY(float x, float z, int numOctaves, float persistence, float lacunarity, float scale)
     {
         float y = 0;
@@ -61,18 +78,25 @@ public class MeshGenerator : MonoBehaviour
         
         return y - numOctaves; // this makes it centered at y = 0
     }
-    
+    */
 
     void CreateShape()
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
-        for(int i = 0, z = 0; z < zSize+1; z++)
+        for(int i = 0, z = 0; z <= zSize; z++)
         {
-            for(int x = 0; x < xSize+1; x++)
+            for(int x = 0; x <= xSize; x++)
             {
-                float y = CalculateY(x,z, numOctaves, persistence, lacunarity, scale);
+                float y =
+                      noise1Amp * Mathf.PerlinNoise(x * noise1Scale, z * noise1Scale)
+                    + noise2Amp * Mathf.PerlinNoise(x * noise2Scale, z * noise2Scale)
+                    + noise3Amp * Mathf.PerlinNoise(x * noise3Scale, z * noise3Scale)
+                        * noiseStrength;
                 vertices[i] = new Vector3(x, y, z);
+
+                if (y > maxTerrainHeight) maxTerrainHeight = y;
+                if (y < minTerrainHeight) minTerrainHeight = y;
                 i++;
             }
         }
@@ -98,8 +122,18 @@ public class MeshGenerator : MonoBehaviour
             // need to increment vert by 1 so that we dont make a triangle from the end of one row to the start of another
             vert++;
         }
-        
-        
+
+        colors = new Color[vertices.Length];
+        for (int i = 0, z = 0; z <= zSize; z++)
+        {
+            for (int x = 0; x <= xSize; x++)
+            {
+                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
+                colors[i] = gradient.Evaluate(height);
+                i++;
+            }
+        }
+
 
     }
 
@@ -109,6 +143,7 @@ public class MeshGenerator : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.colors = colors;
 
         mesh.RecalculateNormals(); // this fixes weird lighting
     }
