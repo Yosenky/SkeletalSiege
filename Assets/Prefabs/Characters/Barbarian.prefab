@@ -263,6 +263,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4e6b064398a0904598a8b3c019b2dbd, type: 3}
+      propertyPath: m_TagString
+      value: Melee
+      objectReference: {fileID: 0}
     - target: {fileID: 1728280593283003582, guid: a4e6b064398a0904598a8b3c019b2dbd, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -391,8 +395,11 @@ MonoBehaviour:
   selectionIndicator: {fileID: 2566992406277034059}
   attackTarget: {fileID: 0}
   projectilePrefab: {fileID: 0}
-  attackDistance: 0
-  attackDelay: 0
+  meleeAttackDistance: 3
+  rangedAttackDistance: 3
+  attackDelay: 1
+  projectileSpeed: 10
+  moveStoppingDistance: 3
 --- !u!195 &4708877961431176829
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -407,7 +414,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
