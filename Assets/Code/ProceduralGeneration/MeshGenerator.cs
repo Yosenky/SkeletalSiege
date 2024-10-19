@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(MeshFilter))] // makes sure that we have to have a mesh filter to run
+[RequireComponent(typeof(NavMeshSurface))]
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
@@ -16,12 +19,19 @@ public class MeshGenerator : MonoBehaviour
     public float lacunarity = 0.5f;
     public float persistence = 1.4f;
     public float scale = 1f;
+
+    public GameObject barbarian;
+
+    private NavMeshSurface navMeshSurface;
     void Start()
     {
         mesh = new Mesh(); 
         GetComponent<MeshFilter>().mesh = mesh;
-
+        navMeshSurface = GetComponent<NavMeshSurface>();
         CreateShape();
+        UpdateMesh();
+        BakeNavMesh();
+        Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
         
     }
 
@@ -29,6 +39,9 @@ public class MeshGenerator : MonoBehaviour
     {
         CreateShape();
         UpdateMesh();
+
+        
+        //BakeNavMesh();
     }
 
     
@@ -98,6 +111,14 @@ public class MeshGenerator : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals(); // this fixes weird lighting
+    }
+
+    void BakeNavMesh()
+    {
+        if (navMeshSurface != null)
+        {
+            navMeshSurface.BuildNavMesh();
+        }
     }
     /**
     private void OnDrawGizmos()
