@@ -36,17 +36,22 @@ public class TowerPlacement : MonoBehaviour
             {
                 hasHit = false;
             }
+
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                currentTower.SetActive(true);
+                currentTower = null;
+            }
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            currentTower = null;
-        }
+        
     }
 
     public void SetCurrentTower(GameObject tower)
     {
         currentTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
+        currentTower.SetActive(false);
     }
 
     private void OnDrawGizmos()
