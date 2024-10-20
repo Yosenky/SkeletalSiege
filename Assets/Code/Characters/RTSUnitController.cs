@@ -11,22 +11,41 @@ public class RTSUnitController : MonoBehaviour
     public GameObject attackTarget;
     public GameObject projectilePrefab;
 
+    public float health = 100f;
+
     // Configuration
     public float meleeAttackDistance;   // Melee units attack when within this distance
     public float rangedAttackDistance;  // Ranged units stop and attack at this distance
     public float attackDelay;           // Delay between attacks
     public float projectileSpeed = 10f; // For ranged units
     public float moveStoppingDistance = 0.5f; // Normal stopping distance for movement
+    public float meleeDamage = 30f;     // Melee attack damage
+
+    public int team = 1;  // Team 1 friendly, Team 2 Enemy
 
     // State Tracking
     float _timeSinceLastAttack;
-    bool isAttacking = false;
 
     // Methods
     public void SetTarget(GameObject target)
     {
-        attackTarget = target;
-        isAttacking = true;
+        // Check if the target is not null
+        if (target == null)
+        {
+            return;  // Exit if the target is null
+        }
+
+        // Check if the target has an RTSUnitController component
+        RTSUnitController targetUnit = target.GetComponent<RTSUnitController>();
+        if (targetUnit != null && targetUnit.team != this.team)
+        {
+            // Set the attack target if it's from a different team
+            attackTarget = target;
+        }
+        else
+        {
+            SetDestination(target.transform.position);
+        }
     }
 
     public void Select()
@@ -49,6 +68,12 @@ public class RTSUnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health <= 0f)
+        {
+            Die();
+            return; // Stop further logic if dead
+        }
+
         // Check if character is close to its destination and stop moving
         if (!navAgent.pathPending)
         {
@@ -109,7 +134,12 @@ public class RTSUnitController : MonoBehaviour
             if (_timeSinceLastAttack >= attackDelay)
             {
                 _timeSinceLastAttack = 0;  // Reset attack timer
-                // Melee attack logic can go here (e.g., damage calculation)
+                
+                RTSUnitController enemyUnit = attackTarget.GetComponent<RTSUnitController>();
+                if (enemyUnit != null && enemyUnit.team != this.team)  // Only deal damage to enemy units
+                {
+                    enemyUnit.TakeDamage(meleeDamage);  // Deal melee damage to the enemy
+                }
             }
         }
     }
@@ -140,10 +170,20 @@ public class RTSUnitController : MonoBehaviour
         }
     }
 
+    // Take damage when attacked
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        Debug.Log(gameObject.name + " took " + damage + " damage! Current health: " + health);
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
     public void SetDestination(Vector3 targetPosition)
     {
         attackTarget = null;  // Clear the attack target since we're moving
-        isAttacking = false;  // No longer attacking
         navAgent.stoppingDistance = moveStoppingDistance;  // Use normal stopping distance for movement
         navAgent.isStopped = false;  // Resume movement
         navAgent.destination = targetPosition;
@@ -156,17 +196,24 @@ public class RTSUnitController : MonoBehaviour
     {
         if (projectilePrefab != null && attackTarget != null)
         {
-            // Instantiate projectile at the unit's position
             GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, 1.5f, 0), Quaternion.identity);
 
-            // Calculate direction towards the target
+            UnitProjectiles projectileScript = projectile.GetComponent<UnitProjectiles>();
+            projectileScript.team = this.team;  // Set the projectile's team to the firing unit's team
+
             Vector3 directionToTarget = (attackTarget.transform.position - transform.position).normalized;
-
-            // Add force to the projectile in the direction of the target
             projectile.GetComponent<Rigidbody>().velocity = directionToTarget * projectileSpeed;
-
-            // Destroy the projectile after a few seconds to prevent clutter
             Destroy(projectile, 5f);
         }
+    }
+
+    void Die()
+    {
+        Debug.Log(gameObject.name + " died!");
+        // Play death animation, disable components, etc.
+        animator.SetTrigger("die");
+        navAgent.isStopped = true;
+        // Disable the unit or destroy it after some time
+        Destroy(gameObject, 2f); // Optional: destroy after 2 seconds
     }
 }
