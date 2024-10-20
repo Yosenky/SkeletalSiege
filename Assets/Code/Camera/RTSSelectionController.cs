@@ -12,6 +12,8 @@ public class RTSGameController : MonoBehaviour
     // Configuration
     float mouseDragThreshold = 3f;
 
+    public int team = 1;
+
     // State Tracking
     public List<GameObject> currentSelection;
     public Vector2 mouseClickStart;
@@ -36,8 +38,8 @@ public class RTSGameController : MonoBehaviour
         DeselectAll();
         foreach (RaycastHit hit in hits)
         {
-            print(hit);
-            if (hit.collider.GetComponent<RTSUnitController>() || hit.collider.GetComponent<LumberJackController>())
+            RTSUnitController unit = hit.collider.GetComponent<RTSUnitController>();
+            if (unit != null && unit.team == this.team)  // Only select units that belong to the player's team
             {
                 currentSelection.Add(hit.collider.gameObject);
                 hit.collider.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
@@ -69,7 +71,7 @@ public class RTSGameController : MonoBehaviour
             );
 
             // Does the character fall inside the box
-            if (anchoredRect.Contains(characterPosition))
+            if (anchoredRect.Contains(characterPosition) && character.team == this.team)
             {
                 currentSelection.Add(character.gameObject);
                 character.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
@@ -92,7 +94,7 @@ public class RTSGameController : MonoBehaviour
             );
 
             // Does the character fall inside the box
-            if (anchoredRect.Contains(characterPosition))
+            if (anchoredRect.Contains(characterPosition) && character.team == this.team)
             {
                 currentSelection.Add(character.gameObject);
                 character.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
