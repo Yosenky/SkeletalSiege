@@ -36,7 +36,8 @@ public class RTSGameController : MonoBehaviour
         DeselectAll();
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.GetComponent<RTSUnitController>())
+            print(hit);
+            if (hit.collider.GetComponent<RTSUnitController>() || hit.collider.GetComponent<LumberJackController>())
             {
                 currentSelection.Add(hit.collider.gameObject);
                 hit.collider.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
@@ -48,6 +49,7 @@ public class RTSGameController : MonoBehaviour
     {
         // TODO: Expensive. In a real production game, you would maintain an ongoing list instead
         RTSUnitController[] characterControllers = FindObjectsOfType<RTSUnitController>();
+        LumberJackController[] lumberJackControllers = FindObjectsOfType<LumberJackController>();
 
         // Loop through each eligible object to see if it's within our selection box boundaries
         DeselectAll();
@@ -73,6 +75,31 @@ public class RTSGameController : MonoBehaviour
                 character.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
             }
         }
+
+        foreach(LumberJackController character in lumberJackControllers)
+        {
+            Vector2 characterPosition = Camera.main.WorldToScreenPoint(character.transform.position);
+
+            // Adjust screen space for any UI scaling
+            characterPosition = characterPosition / uiCanvas.scaleFactor;
+
+            // Build a rectangle that represents where our selection box is on screen
+            Rect anchoredRect = new Rect(
+                selectionBox.anchoredPosition.x - selectionBox.sizeDelta.x / 2f,
+                selectionBox.anchoredPosition.y - selectionBox.sizeDelta.y / 2f,
+                selectionBox.sizeDelta.x,
+                selectionBox.sizeDelta.y
+            );
+
+            // Does the character fall inside the box
+            if (anchoredRect.Contains(characterPosition))
+            {
+                currentSelection.Add(character.gameObject);
+                character.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+
     }
 
     void Start()
@@ -158,6 +185,30 @@ public class RTSGameController : MonoBehaviour
                             {
                                 character.SetTarget(null);
                                 character.SetDestination(hit.point);
+                            }
+                        }
+                    }
+
+                    LumberJackController lumberJack = selection.GetComponent<LumberJackController>();
+                    if (lumberJack)
+                    {
+                        // Get all objects under mouse cursor
+                        Ray selectionRaycast = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
+                        RaycastHit[] hits = Physics.RaycastAll(selectionRaycast);
+
+                        // Check for possible interactions
+                        foreach (RaycastHit hit in hits)
+                        {
+                            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
+                            {
+                                lumberJack.SetTarget(hit.collider.gameObject);
+                                break;
+                            }
+
+                            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                            {
+                                lumberJack.SetTarget(null);
+                                lumberJack.SetDestination(hit.point);
                             }
                         }
                     }
