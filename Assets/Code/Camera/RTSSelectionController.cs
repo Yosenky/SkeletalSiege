@@ -9,6 +9,8 @@ public class RTSGameController : MonoBehaviour
     public Canvas uiCanvas;
     public RectTransform selectionBox;
 
+    public int team = 1;
+
     // Configuration
     float mouseDragThreshold = 3f;
 
@@ -36,7 +38,8 @@ public class RTSGameController : MonoBehaviour
         DeselectAll();
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.GetComponent<RTSUnitController>())
+            RTSUnitController unit = hit.collider.GetComponent<RTSUnitController>();
+            if (unit != null && unit.team == this.team)  // Only select units that belong to the player's team
             {
                 currentSelection.Add(hit.collider.gameObject);
                 hit.collider.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
@@ -46,7 +49,6 @@ public class RTSGameController : MonoBehaviour
 
     void SelectWithinBox()
     {
-        // TODO: Expensive. In a real production game, you would maintain an ongoing list instead
         RTSUnitController[] characterControllers = FindObjectsOfType<RTSUnitController>();
 
         // Loop through each eligible object to see if it's within our selection box boundaries
@@ -67,7 +69,7 @@ public class RTSGameController : MonoBehaviour
             );
 
             // Does the character fall inside the box
-            if (anchoredRect.Contains(characterPosition))
+            if (anchoredRect.Contains(characterPosition) && character.team == this.team)
             {
                 currentSelection.Add(character.gameObject);
                 character.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
