@@ -12,6 +12,7 @@ public class AttackTower : MonoBehaviour
 
     private GameObject currentTarget;
     private float lastShootTime;
+    private bool isActive = false;
 
     void Start()
     {
@@ -20,6 +21,7 @@ public class AttackTower : MonoBehaviour
 
     void Update()
     {
+        if (!isActive) return;
         FindTarget();
         if (currentTarget != null)
         {
@@ -82,7 +84,13 @@ public class AttackTower : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (!isActive) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    public void ActivateTower()
+    {
+        isActive = true;
     }
 }
