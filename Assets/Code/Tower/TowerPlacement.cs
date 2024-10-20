@@ -40,7 +40,11 @@ public class TowerPlacement : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                currentTower.SetActive(true);
+                AttackTower attackTowerScript = currentTower.GetComponent<AttackTower>();
+                if (attackTowerScript != null)
+                {
+                    attackTowerScript.ActivateTower();
+                }
                 currentTower = null;
             }
         }
@@ -51,7 +55,6 @@ public class TowerPlacement : MonoBehaviour
     public void SetCurrentTower(GameObject tower)
     {
         currentTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
-        currentTower.SetActive(false);
     }
 
     private void OnDrawGizmos()
