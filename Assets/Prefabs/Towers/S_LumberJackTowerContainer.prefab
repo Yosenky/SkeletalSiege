@@ -108,14 +108,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7778830811664528791}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 26.89759, y: 0.5, z: -16.51217}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1810156503096122178}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &4741256349240056356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,5 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToSpawn: {fileID: 9139937785762611696, guid: 95d04cf17c501da46a9de671f8d2209c, type: 3}
-  spawnInterval: 5
-  spawnDistance: 1
+  player: 2
+  spawnInterval: 8
+  spawnDistance: 3

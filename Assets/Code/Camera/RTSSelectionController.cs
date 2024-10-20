@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class RTSGameController : MonoBehaviour
 {
     // Outlets
+    public static RTSGameController instance;
     public Canvas uiCanvas;
     public RectTransform selectionBox;
 
@@ -18,6 +19,18 @@ public class RTSGameController : MonoBehaviour
     public List<GameObject> currentSelection;
     public Vector2 mouseClickStart;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
     // Methods
     void DeselectAll()
     {

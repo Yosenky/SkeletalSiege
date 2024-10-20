@@ -6,6 +6,7 @@ public class SpawnTowerController : MonoBehaviour
 {
     // Public or Serialized Fields for GameObject to spawn and the spawn interval
     [SerializeField] private GameObject objectToSpawn;
+    [SerializeField] private int player;
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private float spawnDistance = 3f;
 
@@ -22,10 +23,11 @@ public class SpawnTowerController : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval); // Wait for the specified interval
 
+            Vector3 spawnpoint = transform.position + (player==1 ? Vector3.right * spawnDistance : Vector3.left * spawnDistance);
             if (objectToSpawn != null)
             {
                 // Instantiate the object at the tower's position (+ a slight offset if necessary)
-                Instantiate(objectToSpawn, transform.position + Vector3.forward*spawnDistance, Quaternion.identity);
+                Instantiate(objectToSpawn, spawnpoint, Quaternion.identity);
             }
         }
     }

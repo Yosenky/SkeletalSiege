@@ -12,7 +12,7 @@ public class DepositZone : MonoBehaviour
         if (lumberJack != null && lumberJack.hasLumber)
         {
             lumberJack.DepositLumber();
-            ResourceController.instance.AddGold(10);
+            ResourceController.instance.AddGold(RTSGameController.instance.team,10);
         }
     }
 }

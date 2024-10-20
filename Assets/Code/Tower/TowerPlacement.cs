@@ -6,20 +6,19 @@ public class TowerPlacement : MonoBehaviour
 {
     [SerializeField] private Camera PlayerCamera;
     [SerializeField] private LayerMask placementLayerMask;
-    [SerializeField] private int SpawnTowerCost;
-    [SerializeField] private int AttackTowerCost;
+    [SerializeField] private int PlayerID;
 
     private GameObject currentTower;
 
     private Ray lastRay;
     private Vector3 lastHitPoint;
     private bool hasHit;
-    private int towerCost;
+    private int currentTowerCost;
 
     // Start is called before the first frame update
     void Start()
     {
-        towerCost = 0;
+        currentTowerCost = 0;
     }
 
     // Update is called once per frame
@@ -66,6 +65,11 @@ public class TowerPlacement : MonoBehaviour
         
     }
 
+    public void SetCurrenTowerCost(int towerCost)
+    {
+        currentTowerCost = towerCost;
+    }
+
     public void SetCurrentTower(GameObject tower)
     {
         if (tower == null)
@@ -77,23 +81,13 @@ public class TowerPlacement : MonoBehaviour
         AttackTowerController AttackTower = tower.GetComponent<AttackTowerController>();
         SpawnTowerController SpawnTower = tower.GetComponent<SpawnTowerController>();
 
-        if (!AttackTower)
-        {
-            towerCost = AttackTowerCost;
-        }
-        else if (!SpawnTower)
-        {
-            towerCost = SpawnTowerCost;
-        }
-        else
-        {
-            towerCost = 0;
-        }
+        
 
-        if(towerCost > 0 && ResourceController.instance.GetGold() >= towerCost)
+        if(currentTowerCost > 0 && ResourceController.instance.GetGold(RTSGameController.instance.team) >= currentTowerCost)
         {
-            currentTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
-            ResourceController.instance.SpendGold(towerCost);
+            Quaternion towerRotation = tower.transform.rotation; // Capture the prefab's rotation
+            currentTower = Instantiate(tower, Vector3.zero, towerRotation); // Spawn with prefab's rotation
+            ResourceController.instance.SpendGold(RTSGameController.instance.team, currentTowerCost);
         }
         else
         {

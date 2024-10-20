@@ -8,7 +8,12 @@ public class UIController : MonoBehaviour
 {
     public static UIController instance; // Singleton instance
 
-    [SerializeField] private TMP_Text goldText; // Reference to the UI Text component
+    [SerializeField] private TMP_Text player1GoldText;
+    [SerializeField] private TMP_Text player2GoldText;
+    [SerializeField] private GameObject player1Panel;
+    [SerializeField] private GameObject player2Panel;
+
+    private int currentPlayer = 1; // Use int instead of enum
 
     void Awake()
     {
@@ -25,18 +30,63 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
-        if (goldText == null)
+        if (player1GoldText == null || player2GoldText == null || player1Panel == null || player2Panel == null)
         {
-            Debug.LogError("Gold Text component is not assigned!");
+            Debug.LogError("Gold Text components or Panels are not assigned!");
         }
         else
         {
-            UpdateGoldUI(ResourceController.instance.GetGold()); // Initialize the UI with current gold amount
+            UpdateGoldUI(1, ResourceController.instance.GetGold(1));
+            UpdateGoldUI(2, ResourceController.instance.GetGold(2));
+            UpdateActivePanel();
         }
     }
 
-    public void UpdateGoldUI(int goldAmount)
+    public void UpdateGoldUI(int player, int goldAmount)
     {
-        goldText.text = "Gold: " + goldAmount.ToString();
+        switch (player)
+        {
+            case 1:
+                if (player1GoldText != null)
+                {
+                    player1GoldText.text = "Gold: " + goldAmount;
+                }
+                break;
+            case 2:
+                if (player2GoldText != null)
+                {
+                    player2GoldText.text = "Gold: " + goldAmount;
+                }
+                break;
+        }
+    }
+
+    public void SwitchPlayer()
+    {
+        // Switch the current player
+        currentPlayer = currentPlayer == 1 ? 2 : 1;
+
+        // Notify the CameraController to switch the player view
+        RTSGameController.instance.team = currentPlayer;
+
+        // Update the visible gold UI for the current player
+        UpdateGoldUI(currentPlayer, ResourceController.instance.GetGold(currentPlayer));
+
+        // Update the active panel based on the switched player
+        UpdateActivePanel();
+    }
+
+    private void UpdateActivePanel()
+    {
+        if (currentPlayer == 1)
+        {
+            player1Panel.SetActive(true);
+            player2Panel.SetActive(false);
+        }
+        else if (currentPlayer == 2)
+        {
+            player1Panel.SetActive(false);
+            player2Panel.SetActive(true);
+        }
     }
 }
