@@ -36,7 +36,7 @@ public class RTSGameController : MonoBehaviour
         DeselectAll();
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.GetComponent<RTSBarbarianController>())
+            if (hit.collider.GetComponent<RTSUnitController>())
             {
                 currentSelection.Add(hit.collider.gameObject);
                 hit.collider.SendMessage("Select", SendMessageOptions.DontRequireReceiver);
@@ -47,11 +47,11 @@ public class RTSGameController : MonoBehaviour
     void SelectWithinBox()
     {
         // TODO: Expensive. In a real production game, you would maintain an ongoing list instead
-        RTSBarbarianController[] characterControllers = FindObjectsOfType<RTSBarbarianController>();
+        RTSUnitController[] characterControllers = FindObjectsOfType<RTSUnitController>();
 
         // Loop through each eligible object to see if it's within our selection box boundaries
         DeselectAll();
-        foreach (RTSBarbarianController character in characterControllers)
+        foreach (RTSUnitController character in characterControllers)
         {
             Vector2 characterPosition = Camera.main.WorldToScreenPoint(character.transform.position);
 
@@ -138,7 +138,7 @@ public class RTSGameController : MonoBehaviour
             {
                 foreach (GameObject selection in currentSelection)
                 {
-                    RTSBarbarianController character = selection.GetComponent<RTSBarbarianController>();
+                    RTSUnitController character = selection.GetComponent<RTSUnitController>();
                     if (character)
                     {
                         // Get all objects under mouse cursor
