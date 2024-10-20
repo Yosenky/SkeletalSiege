@@ -49,13 +49,14 @@ public class MeshGenerator : MonoBehaviour
         
     }
 
-    
+    /**
     private void Update()
     {
         CreateShape();
         UpdateMesh();
         if (Input.GetKeyDown(KeyCode.B)) BakeNavMesh();
     }
+    */
     
 
     void CreateShape()

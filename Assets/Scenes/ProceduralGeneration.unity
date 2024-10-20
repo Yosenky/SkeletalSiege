@@ -678,8 +678,8 @@ MonoBehaviour:
   noise1Scale: 0.06
   noise1Amp: 9.45
   noise2Scale: 0.26
-  noise2Amp: -1.36
-  noise3Scale: 0.84
+  noise2Amp: -1.73
+  noise3Scale: 0
   noise3Amp: 1.22
   noiseStrength: 1
   gradient:
@@ -708,7 +708,7 @@ MonoBehaviour:
     atime5: 0
     atime6: 0
     atime7: 0
-    m_Mode: 0
+    m_Mode: 1
     m_ColorSpace: -1
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
@@ -1146,7 +1146,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2489747331428191631, guid: 5b8517bc43e138a4195f78eb20594323, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3010248076355000117, guid: 5b8517bc43e138a4195f78eb20594323, type: 3}
       propertyPath: m_LocalPosition.x
