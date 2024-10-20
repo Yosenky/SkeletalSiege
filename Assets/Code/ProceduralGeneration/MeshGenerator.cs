@@ -23,10 +23,6 @@ public class MeshGenerator : MonoBehaviour
     public float noise3Scale = 80.35f;
     public float noise3Amp = 1f;
     public float noiseStrength = 1f;
-    //public int numOctaves = 4;
-    //public float lacunarity = 0.5f;
-    //public float persistence = 1.4f;
-    //public float scale = 1f;
 
     // coloring map
     Color[] colors;
@@ -35,7 +31,7 @@ public class MeshGenerator : MonoBehaviour
     float maxTerrainHeight;
 
     // unit gameobjects
-    //public GameObject barbarian;
+    public GameObject barbarian;
 
     private NavMeshSurface navMeshSurface;
 
@@ -58,27 +54,8 @@ public class MeshGenerator : MonoBehaviour
         UpdateMesh();
 
         
-        //BakeNavMesh();
+        BakeNavMesh();
     }
-
-    /**
-    float CalculateY(float x, float z, int numOctaves, float persistence, float lacunarity, float scale)
-    {
-        float y = 0;
-        float amplitude = 1;
-        float frequency = 1;
-        for(int i = 0; i < numOctaves; i++)
-        {
-            float perlinValue = Mathf.PerlinNoise(x * frequency / scale, z * frequency / scale);
-            y += perlinValue * amplitude;
-
-            amplitude *= persistence;
-            frequency *= lacunarity;
-        }
-        
-        return y - numOctaves; // this makes it centered at y = 0
-    }
-    */
 
     void CreateShape()
     {
@@ -92,7 +69,14 @@ public class MeshGenerator : MonoBehaviour
                       noise1Amp * Mathf.PerlinNoise(x * noise1Scale, z * noise1Scale)
                     + noise2Amp * Mathf.PerlinNoise(x * noise2Scale, z * noise2Scale)
                     + noise3Amp * Mathf.PerlinNoise(x * noise3Scale, z * noise3Scale)
-                        * noiseStrength;
+                        * noiseStrength - 4;
+                if (x == 0 || x == xSize) {
+                    y = 0;
+                }
+                else if (x < 5 || x > xSize - 5)
+                {
+                    y /= 2; // dampen 
+                }
                 vertices[i] = new Vector3(x, y, z);
 
                 if (y > maxTerrainHeight) maxTerrainHeight = y;
@@ -155,18 +139,13 @@ public class MeshGenerator : MonoBehaviour
             navMeshSurface.BuildNavMesh();
         }
     }
-    /**
-    private void OnDrawGizmos()
+
+    // Normalizes a value within a specified range
+    // Used to make the edge of the procedural generation always connect with the platforms
+    public static float NormalizeToRange(float value, float min, float max, float newMin, float newMax)
     {
-        // make sure that we dont try to draw vertices if we have none
-        if(vertices == null)
-        {
-            return;
-        }
-        for(int i = 0; i < vertices.Length; i++)
-        {
-            Gizmos.DrawSphere(vertices[i], .1f);
-        }
+        float normalizedValue = (value - min) / (max - min);
+
+        return normalizedValue * (newMax - newMin) + newMin;
     }
-    */
 }
