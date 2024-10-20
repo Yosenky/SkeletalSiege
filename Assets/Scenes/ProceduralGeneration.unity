@@ -658,14 +658,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1c383ea4e446940b270d8fda38adc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 200
+  xSize: 300
   zSize: 100
   noise1Scale: 0.06
-  noise1Amp: 9.45
+  noise1Amp: 11
   noise2Scale: 0
-  noise2Amp: -1.73
+  noise2Amp: -0.82
   noise3Scale: 0
-  noise3Amp: 1.22
+  noise3Amp: 0
   noiseStrength: 1
   gradient:
     serializedVersion: 2
@@ -677,10 +677,10 @@ MonoBehaviour:
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 19082
-    ctime2: 40092
-    ctime3: 59945
+    ctime0: 8288
+    ctime1: 23130
+    ctime2: 39707
+    ctime3: 50501
     ctime4: 65535
     ctime5: 0
     ctime6: 0
