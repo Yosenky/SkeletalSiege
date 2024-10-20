@@ -15,14 +15,14 @@ public class MeshGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
 
-    public int xSize = 200;
+    public int xSize = 300;
     public int zSize = 100;
-    public float noise1Scale = 3.26f;
-    public float noise1Amp = 18.76f;
-    public float noise2Scale = 11.04f;
-    public float noise2Amp = -4.2f;
-    public float noise3Scale = 80.35f;
-    public float noise3Amp = 1f;
+    public float noise1Scale = 0.06f;
+    public float noise1Amp = 11f;
+    public float noise2Scale = 0f;
+    public float noise2Amp = -0.82f;
+    public float noise3Scale = 0f;
+    public float noise3Amp = 0f;
     public float noiseStrength = 1f;
 
     // coloring map
@@ -92,7 +92,13 @@ public class MeshGenerator : MonoBehaviour
                 }
 
                 // find spawn point for left side lumber mill
-                if(x > 50 && x < 75)
+                int leftThirdStart = 50;
+                int battlefieldSize = xSize - (leftThirdStart * 2);
+                int leftThirdEnd = leftThirdStart + (battlefieldSize /3);
+                int rightThirdStart = leftThirdEnd + (battlefieldSize / 3);
+                int rightThirdEnd = xSize - leftThirdStart;
+
+                if (x > leftThirdStart && x < leftThirdEnd)
                 {
                     if(y < leftLumberMillSpawnPoint.y)
                     {
@@ -101,7 +107,7 @@ public class MeshGenerator : MonoBehaviour
                 }
 
                 // find spawn point for middle lumber mill
-                if(x > 75 && x < 100)
+                if(x > leftThirdEnd && x < rightThirdStart)
                 {
                     if(y > middleLumberMillSpawnPoint.y)
                     {
@@ -110,7 +116,7 @@ public class MeshGenerator : MonoBehaviour
                 }
 
                 // find spawn point for right side lumber mill
-                if(x > 100 && x < 125)
+                if(x > rightThirdStart && x < rightThirdEnd)
                 {
                     if (y < rightLumberMillSpawnPoint.y)
                     {
