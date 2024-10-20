@@ -128,7 +128,6 @@ public class LumberJackController : MonoBehaviour
     public void DepositLumber()
     {
         hasLumber = false;
-        // give money to player
         ChangeAppearance(hasLumber);
     }
 

@@ -38,7 +38,10 @@ public class MeshGenerator : MonoBehaviour
     private Vector3 rightLumberMillSpawnPoint = new Vector3(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
     private Vector3 middleLumberMillSpawnPoint = new Vector3(Int32.MinValue, Int32.MinValue, Int32.MinValue);
 
-    
+    // Deposit zones
+    public GameObject team1DepositZone;
+    public GameObject team2DepositZone;
+
 
 
 
@@ -64,11 +67,13 @@ public class MeshGenerator : MonoBehaviour
         navMeshSurface = GetComponent<NavMeshSurface>();
         CreateShape();
         UpdateMesh();
-        SpawnLumberMills();
+        
         BakeNavMesh();
-        
+        SpawnLumberMills();
+        team1DepositZone.SetActive(true);
+        team2DepositZone.SetActive(true);
         //Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
-        
+
     }
 
     /**

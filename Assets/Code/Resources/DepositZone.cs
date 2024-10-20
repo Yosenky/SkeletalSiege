@@ -2,18 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LumberMill : MonoBehaviour
+public class DepositZone : MonoBehaviour
 {
 
-    // On trigger, give unit lumber
     private void OnTriggerEnter(Collider other)
     {
         LumberJackController lumberJack = other.gameObject.GetComponent<LumberJackController>();
 
-        if (lumberJack != null)
+        if (lumberJack != null && lumberJack.hasLumber)
         {
-            lumberJack.CollectLumber();
+            lumberJack.DepositLumber();
+            ResourceController.instance.AddGold(10);
         }
     }
-
 }
