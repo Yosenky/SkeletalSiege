@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerController : MonoBehaviour
+public class SpawnTowerController : MonoBehaviour
 {
     // Public or Serialized Fields for GameObject to spawn and the spawn interval
     [SerializeField] private GameObject objectToSpawn;
