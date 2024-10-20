@@ -16,7 +16,7 @@ public class BulletController : MonoBehaviour
             transform.position += directionToTarget * speed * Time.deltaTime;
 
             // Rotate the projectile to face the target
-            transform.LookAt(target.transform);
+            //transform.LookAt(target.transform);
         }
         else
         {

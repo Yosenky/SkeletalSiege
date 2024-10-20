@@ -67,7 +67,14 @@ public class AttackTowerController : MonoBehaviour
     {
         if (projectilePrefab != null && shootPoint != null)
         {
+            // Instantiate the projectile at the shootPoint position and use the rotation of shootPoint
             GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
+
+            // Set the rotation of the projectile such that its Z-axis is rotated by 90 degrees
+            Vector3 projectileEulerAngles = projectile.transform.rotation.eulerAngles;
+            //projectileEulerAngles.y = -30f;
+            projectileEulerAngles.z = 90f;
+            projectile.transform.rotation = Quaternion.Euler(projectileEulerAngles);
 
             // Set the target for the projectile
             BulletController projectileScript = projectile.GetComponent<BulletController>();
@@ -75,6 +82,7 @@ public class AttackTowerController : MonoBehaviour
             {
                 projectileScript.target = currentTarget;
             }
+
         }
         else
         {
