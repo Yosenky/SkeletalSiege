@@ -16,6 +16,11 @@ public class LumberJackController : MonoBehaviour
     public int team = 1;  // Team 1 friendly, Team 2 Enemy
     public bool hasLumber = false;
     private SkinnedMeshRenderer hoodRenderer;
+    private SkinnedMeshRenderer leftArmRenderer;
+    private SkinnedMeshRenderer rightArmRenderer;
+    private SkinnedMeshRenderer bodyRenderer;
+    private SkinnedMeshRenderer leftLegRenderer;
+    private SkinnedMeshRenderer rightLegRenderer;
 
 
     // Methods
@@ -45,6 +50,12 @@ public class LumberJackController : MonoBehaviour
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.stoppingDistance = moveStoppingDistance;
         hoodRenderer = transform.Find("Rogue_Head_Hooded").GetComponent<SkinnedMeshRenderer>();
+        leftArmRenderer = transform.Find("Rogue_ArmLeft").GetComponent<SkinnedMeshRenderer>();
+        rightArmRenderer = transform.Find("Rogue_ArmRight").GetComponent<SkinnedMeshRenderer>();
+        bodyRenderer = transform.Find("Rogue_Body").GetComponent<SkinnedMeshRenderer>();
+        leftLegRenderer = transform.Find("Rogue_LegLeft").GetComponent<SkinnedMeshRenderer>();
+        rightLegRenderer = transform.Find("Rogue_LegRight").GetComponent<SkinnedMeshRenderer>();
+
         ChangeAppearance(hasLumber);
     }
 
@@ -117,7 +128,6 @@ public class LumberJackController : MonoBehaviour
     public void DepositLumber()
     {
         hasLumber = false;
-        // give money to player
         ChangeAppearance(hasLumber);
     }
 
@@ -129,7 +139,13 @@ public class LumberJackController : MonoBehaviour
             if (hoodRenderer != null)
             {
                 // Change the material color to red (or any other color)
-                hoodRenderer.material.color = Color.red;
+                hoodRenderer.material.color = Color.green;
+                leftArmRenderer.material.color = Color.green;
+                rightArmRenderer.material.color = Color.green;
+                bodyRenderer.material.color = Color.green;
+                leftLegRenderer.material.color = Color.green;
+                rightLegRenderer.material.color = Color.green;
+
             }
         }
         else 
@@ -138,7 +154,12 @@ public class LumberJackController : MonoBehaviour
             if (hoodRenderer != null)
             {
                 // Change the material color to red (or any other color)
-                hoodRenderer.material.color = Color.blue;
+                hoodRenderer.material.color = Color.red;
+                leftArmRenderer.material.color = Color.red;
+                rightArmRenderer.material.color = Color.red;
+                bodyRenderer.material.color = Color.red;
+                leftLegRenderer.material.color = Color.red;
+                rightLegRenderer.material.color = Color.red;
             }
         }
     } 

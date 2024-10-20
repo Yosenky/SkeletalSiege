@@ -20,11 +20,13 @@ public class RTSUnitController : MonoBehaviour
     public float projectileSpeed = 10f; // For ranged units
     public float moveStoppingDistance = 0.5f; // Normal stopping distance for movement
     public float meleeDamage = 30f;     // Melee attack damage
+    public float detectionRadius = 10f; // How far the AI can detect enemies
 
     public int team = 1;  // Team 1 friendly, Team 2 Enemy
 
     // State Tracking
     float _timeSinceLastAttack;
+    bool isManuallyControlled = false;
 
     // Methods
     public void SetTarget(GameObject target)
@@ -72,6 +74,11 @@ public class RTSUnitController : MonoBehaviour
         {
             Die();
             return; // Stop further logic if dead
+        }
+
+        if (!isManuallyControlled)
+        {
+            HandleAI();
         }
 
         // Check if character is close to its destination and stop moving
@@ -170,6 +177,56 @@ public class RTSUnitController : MonoBehaviour
         }
     }
 
+    void HandleAI()
+    {
+        // If there's no target, search for the closest enemy
+        if (attackTarget == null)
+        {
+            DetectAndSetClosestEnemy();
+        }
+        else
+        {
+            // If there is a target, follow and attack it
+            float distanceToTarget = Vector3.Distance(attackTarget.transform.position, transform.position);
+
+            // Move towards the target if not in range
+            if (CompareTag("Melee") && distanceToTarget > meleeAttackDistance ||
+                CompareTag("Range") && distanceToTarget > rangedAttackDistance)
+            {
+                SetDestination(attackTarget.transform.position);
+            }
+        }
+    }
+
+    // Detect and set the closest enemy within the detection radius
+    void DetectAndSetClosestEnemy()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius);
+        float closestDistance = detectionRadius;
+        GameObject closestEnemy = null;
+
+        foreach (Collider hit in hits)
+        {
+            RTSUnitController unit = hit.GetComponent<RTSUnitController>();
+
+            // Check if the detected unit is from the enemy team
+            if (unit != null && unit.team != this.team)
+            {
+                float distance = Vector3.Distance(unit.transform.position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = unit.gameObject;
+                }
+            }
+        }
+
+        // If an enemy is found, set it as the target
+        if (closestEnemy != null)
+        {
+            SetTarget(closestEnemy);
+        }
+    }
     // Take damage when attacked
     public void TakeDamage(float damage)
     {
@@ -190,6 +247,16 @@ public class RTSUnitController : MonoBehaviour
 
         // Stop the attack animation by setting the bool to false
         animator.SetBool("attack", false);
+
+        // Disable AI while the unit is manually controlled
+        isManuallyControlled = true;
+        Invoke("EnableAI", 5f);  // Re-enable AI after 5 seconds
+    }
+
+    // Re-enable AI after manual command
+    void EnableAI()
+    {
+        isManuallyControlled = false;
     }
 
     void FireProjectile()
