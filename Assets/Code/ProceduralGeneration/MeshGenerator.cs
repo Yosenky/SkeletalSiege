@@ -31,8 +31,6 @@ public class MeshGenerator : MonoBehaviour
     float minTerrainHeight;
     float maxTerrainHeight;
 
-    // unit gameobjects
-    public GameObject barbarian;
 
     // Spawning in lumber mills
     public GameObject lumberMillPrefab;
@@ -47,14 +45,28 @@ public class MeshGenerator : MonoBehaviour
 
     void Start()
     {
+        /**
+        if (seed == 0)
+        {
+            seed = UnityEngine.Random.Range(1, 100000);
+        }
+        // Initialize the random number generator with the seed
+        UnityEngine.Random.InitState(seed);
+        Debug.Log("Using seed: " + seed);
+        noise1Scale = UnityEngine.Random.Range(0.50f, 0.63f);
+        noise1Amp = UnityEngine.Random.Range(4f, 6f);
+        */
+
+
         mesh = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; // Ensure it supports large meshes
         mesh.MarkDynamic(); // Marks the mesh as dynamic
         GetComponent<MeshFilter>().mesh = mesh;
         navMeshSurface = GetComponent<NavMeshSurface>();
         CreateShape();
         UpdateMesh();
-        BakeNavMesh();
         SpawnLumberMills();
+        BakeNavMesh();
+        
         //Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
         
     }
@@ -109,9 +121,9 @@ public class MeshGenerator : MonoBehaviour
                 // find spawn point for middle lumber mill
                 if(x > leftThirdEnd && x < rightThirdStart)
                 {
-                    if(y > middleLumberMillSpawnPoint.y)
+                    if((y-1) > middleLumberMillSpawnPoint.y)
                     {
-                        middleLumberMillSpawnPoint = new Vector3(x, y, z);
+                        middleLumberMillSpawnPoint = new Vector3(x, y-1, z);
                     }
                 }
 
