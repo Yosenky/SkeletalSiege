@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
@@ -10,7 +11,7 @@ public class MeshGenerator : MonoBehaviour
 {
     // generating map
     Mesh mesh;
-
+    private NavMeshSurface navMeshSurface;
     Vector3[] vertices;
     int[] triangles;
 
@@ -33,7 +34,15 @@ public class MeshGenerator : MonoBehaviour
     // unit gameobjects
     public GameObject barbarian;
 
-    private NavMeshSurface navMeshSurface;
+    // Spawning in lumber mills
+    public GameObject lumberMillPrefab;
+    private Vector3 leftLumberMillSpawnPoint = new Vector3(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
+    private Vector3 rightLumberMillSpawnPoint = new Vector3(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
+    private Vector3 middleLumberMillSpawnPoint = new Vector3(Int32.MinValue, Int32.MinValue, Int32.MinValue);
+
+    
+
+
 
 
     void Start()
@@ -45,6 +54,7 @@ public class MeshGenerator : MonoBehaviour
         CreateShape();
         UpdateMesh();
         BakeNavMesh();
+        SpawnLumberMills();
         //Instantiate(barbarian, new Vector3(10, 1, 10), Quaternion.identity);
         
     }
@@ -61,6 +71,7 @@ public class MeshGenerator : MonoBehaviour
 
     void CreateShape()
     {
+
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
         for(int i = 0, z = 0; z <= zSize; z++)
@@ -72,11 +83,43 @@ public class MeshGenerator : MonoBehaviour
                     + noise2Amp * Mathf.PerlinNoise(x * noise2Scale, z * noise2Scale)
                     + noise3Amp * Mathf.PerlinNoise(x * noise3Scale, z * noise3Scale)
                         * noiseStrength - 4;
+
+
                 // if in base, make flat
                 if (x < 50 || x > xSize - 50)
                 {
                     y = 0;
                 }
+
+                // find spawn point for left side lumber mill
+                if(x > 50 && x < 75)
+                {
+                    if(y < leftLumberMillSpawnPoint.y)
+                    {
+                        leftLumberMillSpawnPoint = new Vector3(x, y, z);
+                    }
+                }
+
+                // find spawn point for middle lumber mill
+                if(x > 75 && x < 100)
+                {
+                    if(y > middleLumberMillSpawnPoint.y)
+                    {
+                        middleLumberMillSpawnPoint = new Vector3(x, y, z);
+                    }
+                }
+
+                // find spawn point for right side lumber mill
+                if(x > 100 && x < 125)
+                {
+                    if (y < rightLumberMillSpawnPoint.y)
+                    {
+                        rightLumberMillSpawnPoint = new Vector3(x, y, z);
+                    }
+                }
+
+
+
                 vertices[i] = new Vector3(x, y, z);
 
                 if (y > maxTerrainHeight) maxTerrainHeight = y;
@@ -159,12 +202,12 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
-    // Normalizes a value within a specified range
-    // Used to make the edge of the procedural generation always connect with the platforms
-    public static float NormalizeToRange(float value, float min, float max, float newMin, float newMax)
+    void SpawnLumberMills()
     {
-        float normalizedValue = (value - min) / (max - min);
+        Quaternion lumberMillRotation = Quaternion.Euler(-90, 0, 0);
 
-        return normalizedValue * (newMax - newMin) + newMin;
+        Instantiate(lumberMillPrefab, leftLumberMillSpawnPoint, lumberMillRotation);
+        Instantiate(lumberMillPrefab, middleLumberMillSpawnPoint, lumberMillRotation);
+        Instantiate(lumberMillPrefab, rightLumberMillSpawnPoint, lumberMillRotation);
     }
 }
