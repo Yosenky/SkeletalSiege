@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackTower : MonoBehaviour
+public class AttackTowerController : MonoBehaviour
 {
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float turnSpeed = 5f;
@@ -12,6 +12,7 @@ public class AttackTower : MonoBehaviour
 
     private GameObject currentTarget;
     private float lastShootTime;
+    private bool isActive = false;
 
     void Start()
     {
@@ -20,6 +21,7 @@ public class AttackTower : MonoBehaviour
 
     void Update()
     {
+        if (!isActive) return;
         FindTarget();
         if (currentTarget != null)
         {
@@ -82,7 +84,13 @@ public class AttackTower : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (!isActive) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    public void ActivateTower()
+    {
+        isActive = true;
     }
 }
