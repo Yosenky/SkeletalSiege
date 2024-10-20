@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackTower : MonoBehaviour
+public class AttackTowerController : MonoBehaviour
 {
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float turnSpeed = 5f;

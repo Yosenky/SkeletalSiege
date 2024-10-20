@@ -6,16 +6,20 @@ public class TowerPlacement : MonoBehaviour
 {
     [SerializeField] private Camera PlayerCamera;
     [SerializeField] private LayerMask placementLayerMask;
+    [SerializeField] private int SpawnTowerCost;
+    [SerializeField] private int AttackTowerCost;
+
     private GameObject currentTower;
 
     private Ray lastRay;
     private Vector3 lastHitPoint;
     private bool hasHit;
+    private int towerCost;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Optional: initialize any startup logic here.
+        towerCost = 0;
     }
 
     // Update is called once per frame
@@ -40,10 +44,20 @@ public class TowerPlacement : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                AttackTower attackTowerScript = currentTower.GetComponent<AttackTower>();
-                if (attackTowerScript != null)
+                AttackTowerController AttackTower = currentTower.GetComponent<AttackTowerController>();
+                SpawnTowerController SpawnTower = currentTower.GetComponent<SpawnTowerController>();
+                if (AttackTower != null)
                 {
-                    attackTowerScript.ActivateTower();
+                    AttackTower.ActivateTower();
+                }
+                else if(SpawnTower != null)
+                {
+                    SpawnTower.ActivateTower();
+                }
+                else
+                {
+                    Debug.Log("No valid tower");
+                    return;
                 }
                 currentTower = null;
             }
@@ -54,7 +68,38 @@ public class TowerPlacement : MonoBehaviour
 
     public void SetCurrentTower(GameObject tower)
     {
-        currentTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
+        if (tower == null)
+        {
+            Debug.LogError("Tower prefab is null.");
+            return;
+        }
+
+        AttackTowerController AttackTower = tower.GetComponent<AttackTowerController>();
+        SpawnTowerController SpawnTower = tower.GetComponent<SpawnTowerController>();
+
+        if (!AttackTower)
+        {
+            towerCost = AttackTowerCost;
+        }
+        else if (!SpawnTower)
+        {
+            towerCost = SpawnTowerCost;
+        }
+        else
+        {
+            towerCost = 0;
+        }
+
+        if(towerCost > 0 && ResourceController.instance.GetGold() >= towerCost)
+        {
+            currentTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
+            ResourceController.instance.SpendGold(towerCost);
+        }
+        else
+        {
+            Debug.Log("Not enough gold!");
+        }
+        
     }
 
     private void OnDrawGizmos()

@@ -9,16 +9,16 @@ public class SpawnTowerController : MonoBehaviour
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private float spawnDistance = 3f;
 
+    private bool isActive = false;
     private void Start()
     {
-        // Start the Spawn Coroutine
-        StartCoroutine(SpawnObjectRoutine());
+
     }
 
     // Coroutine to spawn objects at set intervals
     private IEnumerator SpawnObjectRoutine()
     {
-        while (true)
+        while (isActive)
         {
             yield return new WaitForSeconds(spawnInterval); // Wait for the specified interval
 
@@ -28,5 +28,11 @@ public class SpawnTowerController : MonoBehaviour
                 Instantiate(objectToSpawn, transform.position + Vector3.forward*spawnDistance, Quaternion.identity);
             }
         }
+    }
+
+    public void ActivateTower()
+    {
+        isActive = true;
+        StartCoroutine(SpawnObjectRoutine());
     }
 }

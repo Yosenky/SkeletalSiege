@@ -6,7 +6,7 @@ public class ResourceController : MonoBehaviour
 {
     public static ResourceController instance; // Singleton instance
 
-    private int gold;
+    public int gold;
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public class ResourceController : MonoBehaviour
 
     void Start()
     {
-        gold = 0; // Initialize gold
+
     }
 
     public int GetGold()

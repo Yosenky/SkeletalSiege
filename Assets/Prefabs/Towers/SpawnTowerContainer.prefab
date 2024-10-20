@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5112910573393996324}
+  - component: {fileID: 2769732934174978668}
   m_Layer: 0
-  m_Name: BarbarianTowerContainer
+  m_Name: SpawnTowerContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 2107406309058349341}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2769732934174978668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569706341239721953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef2b53258283c8f4e837bb5ed09d3cc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToSpawn: {fileID: 2489747331428191631, guid: 5b8517bc43e138a4195f78eb20594323, type: 3}
+  spawnInterval: 2
+  spawnDistance: 1
 --- !u!1 &912049142425046992
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,9 +60,8 @@ GameObject:
   - component: {fileID: 3300166577845061922}
   - component: {fileID: 1864091695341762626}
   - component: {fileID: 611628468086109101}
-  - component: {fileID: 8741805835604710378}
   m_Layer: 0
-  m_Name: BarbarianTower
+  m_Name: SpawnTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,18 +153,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8741805835604710378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912049142425046992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef2b53258283c8f4e837bb5ed09d3cc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 2489747331428191631, guid: 5b8517bc43e138a4195f78eb20594323, type: 3}
-  spawnInterval: 2
-  spawnDistance: 1

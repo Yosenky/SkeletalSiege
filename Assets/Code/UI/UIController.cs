@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
     public static UIController instance; // Singleton instance
 
-    [SerializeField] private Text goldText; // Reference to the UI Text component
+    [SerializeField] private TMP_Text goldText; // Reference to the UI Text component
 
     void Awake()
     {
