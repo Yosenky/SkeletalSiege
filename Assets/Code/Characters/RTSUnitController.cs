@@ -221,6 +221,22 @@ public class RTSUnitController : MonoBehaviour
             }
         }
 
+        foreach (Collider hit in hits)
+        {
+            LumberJackController unit = hit.GetComponent<LumberJackController>();
+
+            // Check if the detected unit is from the enemy team
+            if (unit != null && unit.team != this.team)
+            {
+                float distance = Vector3.Distance(unit.transform.position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = unit.gameObject;
+                }
+            }
+        }
+
         // If an enemy is found, set it as the target
         if (closestEnemy != null)
         {
