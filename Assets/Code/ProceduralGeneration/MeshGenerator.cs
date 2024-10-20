@@ -14,7 +14,7 @@ public class MeshGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
 
-    public int xSize = 100;
+    public int xSize = 200;
     public int zSize = 100;
     public float noise1Scale = 3.26f;
     public float noise1Amp = 18.76f;
@@ -38,7 +38,8 @@ public class MeshGenerator : MonoBehaviour
 
     void Start()
     {
-        mesh = new Mesh(); 
+        mesh = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; // Ensure it supports large meshes
+        mesh.MarkDynamic(); // Marks the mesh as dynamic
         GetComponent<MeshFilter>().mesh = mesh;
         navMeshSurface = GetComponent<NavMeshSurface>();
         CreateShape();
@@ -48,14 +49,14 @@ public class MeshGenerator : MonoBehaviour
         
     }
 
+    
     private void Update()
     {
         CreateShape();
         UpdateMesh();
-
-        
-        BakeNavMesh();
+        if (Input.GetKeyDown(KeyCode.B)) BakeNavMesh();
     }
+    
 
     void CreateShape()
     {
@@ -70,12 +71,10 @@ public class MeshGenerator : MonoBehaviour
                     + noise2Amp * Mathf.PerlinNoise(x * noise2Scale, z * noise2Scale)
                     + noise3Amp * Mathf.PerlinNoise(x * noise3Scale, z * noise3Scale)
                         * noiseStrength - 4;
-                if (x == 0 || x == xSize) {
-                    y = 0;
-                }
-                else if (x < 5 || x > xSize - 5)
+                // if in base, make flat
+                if (x < 50 || x > xSize - 50)
                 {
-                    y /= 2; // dampen 
+                    y = 0;
                 }
                 vertices[i] = new Vector3(x, y, z);
 
@@ -117,8 +116,6 @@ public class MeshGenerator : MonoBehaviour
                 i++;
             }
         }
-
-
     }
 
     void UpdateMesh()
@@ -130,13 +127,34 @@ public class MeshGenerator : MonoBehaviour
         mesh.colors = colors;
 
         mesh.RecalculateNormals(); // this fixes weird lighting
+
+        // Update the mesh collider
+        MeshCollider meshCollider = GetComponent<MeshCollider>();
+        if (meshCollider != null)
+        {
+            meshCollider.sharedMesh = mesh; // Assign the updated mesh
+        }
+        //BakeNavMesh();
     }
 
     void BakeNavMesh()
     {
+        MeshCollider meshCollider = GetComponent<MeshCollider>();
         if (navMeshSurface != null)
         {
-            navMeshSurface.BuildNavMesh();
+            if (mesh.vertexCount > 0 && meshCollider.sharedMesh != null)
+            {
+                Debug.Log("Baking NavMesh with vertex count: " + mesh.vertexCount);
+                navMeshSurface.BuildNavMesh();
+            }
+            else
+            {
+                Debug.LogWarning("Mesh is invalid or empty. Cannot bake NavMesh.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("NavMeshSurface component is missing!");
         }
     }
 
