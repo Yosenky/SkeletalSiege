@@ -496,6 +496,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be78be0fdf162194581f1adee7be46b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &292270115
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1223863265495381428, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_Name
+      value: LumberJack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.4880587
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2619629
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569219968057885446, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0389e58aacf7e2340adeb9c1fe242614, type: 3}
 --- !u!1 &902540097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,6 +1499,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton_LumberJack
       objectReference: {fileID: 0}
+    - target: {fileID: 9139937785762611696, guid: 95d04cf17c501da46a9de671f8d2209c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1460,5 +1521,6 @@ SceneRoots:
   - {fileID: 1569000436}
   - {fileID: 1917100390}
   - {fileID: 4056476614344012823}
+  - {fileID: 292270115}
   - {fileID: 258826289}
   - {fileID: 119357650}

@@ -37,9 +37,13 @@ public class RTSUnitController : MonoBehaviour
             return;  // Exit if the target is null
         }
 
-        // Check if the target has an RTSUnitController component
+        // Check if the target has an RTSUnitController or LumberJackController component
         RTSUnitController targetUnit = target.GetComponent<RTSUnitController>();
-        if (targetUnit != null && targetUnit.team != this.team)
+        LumberJackController targetLumberJack = target.GetComponent<LumberJackController>();
+
+        // Check if the target is an enemy based on team assignment
+        if ((targetUnit != null && targetUnit.team != this.team) ||
+            (targetLumberJack != null && targetLumberJack.team != this.team))
         {
             // Set the attack target if it's from a different team
             attackTarget = target;
@@ -141,15 +145,26 @@ public class RTSUnitController : MonoBehaviour
             if (_timeSinceLastAttack >= attackDelay)
             {
                 _timeSinceLastAttack = 0;  // Reset attack timer
-                
+
+                // Check for RTSUnitController
                 RTSUnitController enemyUnit = attackTarget.GetComponent<RTSUnitController>();
-                if (enemyUnit != null && enemyUnit.team != this.team)  // Only deal damage to enemy units
+
+                // Check for LumberJackController if RTSUnitController is null
+                LumberJackController lumberJackUnit = attackTarget.GetComponent<LumberJackController>();
+
+                // Only deal damage to enemy units
+                if (enemyUnit != null && enemyUnit.team != this.team)
                 {
-                    enemyUnit.TakeDamage(meleeDamage);  // Deal melee damage to the enemy
+                    enemyUnit.TakeDamage(meleeDamage);  // Deal melee damage to the RTS unit
+                }
+                else if (lumberJackUnit != null && lumberJackUnit.team != this.team)
+                {
+                    lumberJackUnit.TakeDamage(meleeDamage);  // Deal melee damage to the LumberJack unit
                 }
             }
         }
     }
+
 
     // Logic for ranged unit attacks
     void HandleRangedAttack(float distanceToTarget)
@@ -207,7 +222,9 @@ public class RTSUnitController : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
+            // Check for RTSUnitController or LumberJackController components
             RTSUnitController unit = hit.GetComponent<RTSUnitController>();
+            LumberJackController lumberJack = hit.GetComponent<LumberJackController>();
 
             // Check if the detected unit is from the enemy team
             if (unit != null && unit.team != this.team)
@@ -219,6 +236,15 @@ public class RTSUnitController : MonoBehaviour
                     closestEnemy = unit.gameObject;
                 }
             }
+            else if (lumberJack != null && lumberJack.team != this.team)
+            {
+                float distance = Vector3.Distance(lumberJack.transform.position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = lumberJack.gameObject;
+                }
+            }
         }
 
         // If an enemy is found, set it as the target
@@ -227,6 +253,8 @@ public class RTSUnitController : MonoBehaviour
             SetTarget(closestEnemy);
         }
     }
+
+
     // Take damage when attacked
     public void TakeDamage(float damage)
     {
